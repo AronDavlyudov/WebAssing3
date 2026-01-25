@@ -1,0 +1,81 @@
+header {
+  text-align: center;
+  padding: 40px 20px;
+}
+header h1 {
+  font-size: 32px;
+  color: #333;
+}
+header h2 {
+  font-size: 18px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.alumni {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+.card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+.card p {
+  color: #666;
+  margin-bottom: 15px;
+}
+.card input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+.card input:focus {
+  outline: none;
+  border-color: #1e88e5;
+}
+.card button {
+  padding: 8px 14px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #1e88e5;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+.card button:hover {
+  background: rgb(21.5458167331, 109.3864541833, 186.4541832669);
+}
+.card button:last-child {
+  background: #e53935;
+}
+.card button:last-child:hover {
+  background: rgb(204.6578947368, 30.3947368421, 26.3421052632);
+}
+
+/*# sourceMappingURL=alumni-card.css.map */

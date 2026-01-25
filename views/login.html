@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Дарын Түлектер</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/header.css">
+  <link rel="stylesheet" href="/css/class.css">
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">Дарын Түлектер</div>
+  <div class="pages">
+    <ul class="nav-items">
+      <li class="active"><a href="/">Alumni</a></li>
+      <li><a href="/report">Reports</a></li>
+      <li><a href="/idea">Ideas</a></li>
+      <li><a href="/search?q=alumni">Search</a></li>
+      <li><a href="/api/info">API Info</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/alumni-crud">CRUD</a></li>
+
+    </ul>
+    <input type="checkbox" id="burger">
+    <label for="burger"></label>
+    <div class="burger-menu">
+      <ul>
+        <li class="active"><a href="/">Alumni</a></li>
+        <li><a href="/report">Reports</a></li>
+        <li><a href="/idea">Ideas</a></li>
+        <li><a href="/search?q=alumni">Search</a></li>
+        <li><a href="/api/info">API Info</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/alumni-crud">CRUD</a></li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+<header>
+  <h1>Login</h1>
+  <h2>To log in to the system, please use the identification number and password that were issued to you.</h2>
+</header>
+<main>
+  <form action="/login" method="post" class="form border">
+    <h3>Login</h3>
+    <div class="input">
+      <h6>Telephone</h6>
+      <input type="tel" name="phone" placeholder="+7 999 999 99 99" required>
+    </div>
+    <div class="input">
+      <h6>Password</h6>
+      <input type="password" name="password" placeholder="Enter your password" required>
+    </div>
+    <button type="submit">Login</button>
+  </form>
+</main>
+</body>
+</html>

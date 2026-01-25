@@ -1,0 +1,49 @@
+.border {
+  width: fit-content;
+  padding: 24px;
+}
+
+.form {
+  margin: 0 auto;
+}
+.form h3 {
+  color: #3B82F6;
+  font-family: Roboto;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 36px;
+}
+.form h4 {
+  color: #4B5563;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+.form .input h6 {
+  color: #111827;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 12px;
+}
+.form .input input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+.form .input input::placeholder {
+  color: #ADAEBC;
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  border-radius: 8px;
+}
+
+/*# sourceMappingURL=login.css.map */

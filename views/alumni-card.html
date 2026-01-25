@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alumni CRUD Advanced - Дарын Түлектер</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/alumni-card.css">
+    <style>
+        .edit-section { display: none; background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #007bff; }
+        .card { position: relative; padding: 20px; border: 1px solid #ddd; margin-bottom: 10px; border-radius: 8px; background: #fff; }
+        .btn-delete { background: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        .btn-edit { background: #007bff; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-right: 5px; }
+
+        /* Стили для новых полей */
+        .form-row { display: flex; gap: 10px; margin-bottom: 8px; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-right: 5px; }
+        .badge-id { background: #e3f2fd; color: #1976d2; }
+        .badge-gpa { background: #e8f5e9; color: #2e7d32; }
+        .sort-panel { background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">Дарын Түлектер</div>
+    <div class="pages">
+        <ul class="nav-items">
+            <li><a href="/">Alumni</a></li>
+            <li><a href="/report">Reports</a></li>
+            <li><a href="/idea">Ideas</a></li>
+            <li><a href="/api/items">API JSON</a></li>
+            <li><a href="/alumni-crud" class="active">CRUD</a></li>
+        </ul>
+    </div>
+</nav>
+
+<header>
+    <h1>Alumni Management System</h1>
+    <h2>Advanced Database Control with Sorting</h2>
+</header>
+
+<main class="alumni" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+
+    <div id="editArea" class="edit-section">
+        <h3>Edit Graduate</h3>
+        <input type="hidden" id="editId">
+        <div class="form-row">
+            <input id="editTitle" placeholder="Full Name" style="flex: 2;">
+            <input id="editCourseId" placeholder="Course ID" style="flex: 1;">
+        </div>
+        <div class="form-row">
+            <input id="editDescription" type="number" placeholder="Year" style="flex: 1;">
+            <input id="editGpa" type="number" step="0.1" placeholder="GPA" style="flex: 1;">
+        </div>
+        <button onclick="updateItem()" style="background: #28a745; color:white; border:none; padding:8px 15px; cursor:pointer; border-radius:4px;">Save Changes</button>
+        <button onclick="hideEdit()" style="background: #6c757d; color:white; border:none; padding:8px 15px; cursor:pointer; border-radius:4px;">Cancel</button>
+    </div>
+
+    <div class="card">
+        <h3>Add New Graduate</h3>
+        <div class="form-row">
+            <input id="title" placeholder="Full Name" style="flex: 2; padding: 8px;">
+            <input id="courseId" placeholder="Course ID (e.g. CS-101)" style="flex: 1; padding: 8px;">
+        </div>
+        <div class="form-row">
+            <input id="description" type="number" placeholder="Class Year" style="flex: 1; padding: 8px;">
+            <input id="gpa" type="number" step="0.1" placeholder="GPA (0.0 - 4.0)" style="flex: 1; padding: 8px;">
+        </div>
+        <button onclick="createItem()" style="width:100%; padding: 10px; background: #28a745; color: white; border: none; cursor: pointer; font-weight: bold; border-radius:4px;">ADD TO DATABASE</button>
+    </div>
+
+    <hr style="margin: 30px 0;">
+
+    <div class="sort-panel">
+        <strong>Sort by:</strong>
+        <select id="sortBy" onchange="loadItems()" style="padding: 5px;">
+            <option value="title">Name (A-Z)</option>
+            <option value="courseId">Course ID</option>
+            <option value="description">Year</option>
+            <option value="gpa">GPA</option>
+        </select>
+        <select id="order" onchange="loadItems()" style="padding: 5px;">
+            <option value="asc">Ascending ↑</option>
+            <option value="desc">Descending ↓</option>
+        </select>
+    </div>
+
+    <h3>Graduates List</h3>
+    <div id="cards"></div>
+
+</main>
+
+
+
+<script>
+    const API_URL = '/api/items';
+
+    async function loadItems() {
+        const sortBy = document.getElementById('sortBy').value;
+        const order = document.getElementById('order').value;
+
+        const res = await fetch(`${API_URL}?sortBy=${sortBy}&order=${order}`);
+        const items = await res.json();
+        const container = document.getElementById('cards');
+        container.innerHTML = '';
+
+        items.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h4 style="margin: 0 0 5px 0;">${item.title}</h4>
+                        <span class="badge badge-id">ID: ${item.courseId || 'N/A'}</span>
+                        <span class="badge badge-gpa">GPA: ${item.gpa || '0.0'}</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <small>Year:</small> <strong>${item.description}</strong>
+                    </div>
+                </div>
+                <div style="margin-top:15px; border-top: 1px solid #eee; pt: 10px;">
+                    <button class="btn-edit" onclick="showEdit('${item._id}', '${item.title}', '${item.description}', '${item.courseId || ''}', '${item.gpa || ''}')">Edit</button>
+                    <button class="btn-delete" onclick="deleteItem('${item._id}')">Delete</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    async function createItem() {
+        const data = {
+            title: document.getElementById('title').value,
+            courseId: document.getElementById('courseId').value,
+            description: document.getElementById('description').value,
+            gpa: parseFloat(document.getElementById('gpa').value) || 0
+        };
+
+        if (!data.title || !data.courseId) return alert("Fill required fields (Name & Course ID)!");
+
+        await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        document.getElementById('title').value = '';
+        document.getElementById('courseId').value = '';
+        document.getElementById('description').value = '';
+        document.getElementById('gpa').value = '';
+        loadItems();
+    }
+
+    async function deleteItem(id) {
+        if (!confirm("Are you sure?")) return;
+        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        loadItems();
+    }
+
+    function showEdit(id, title, desc, courseId, gpa) {
+        document.getElementById('editArea').style.display = 'block';
+        document.getElementById('editId').value = id;
+        document.getElementById('editTitle').value = title;
+        document.getElementById('editDescription').value = desc;
+        document.getElementById('editCourseId').value = courseId;
+        document.getElementById('editGpa').value = gpa;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function hideEdit() {
+        document.getElementById('editArea').style.display = 'none';
+    }
+
+    async function updateItem() {
+        const id = document.getElementById('editId').value;
+        const data = {
+            title: document.getElementById('editTitle').value,
+            courseId: document.getElementById('editCourseId').value,
+            description: document.getElementById('editDescription').value,
+            gpa: parseFloat(document.getElementById('editGpa').value) || 0
+        };
+
+        await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        hideEdit();
+        loadItems();
+    }
+
+    window.onload = loadItems;
+</script>
+
+</body>
+</html>
