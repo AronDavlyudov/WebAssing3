@@ -9,52 +9,60 @@
   <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
+
 <nav class="navbar">
-  <div class="logo">Дарын Түлектер</div>
-  <div class="pages">
-    <ul class="nav-items">
-      <li class="active"><a href="/">Alumni</a></li>
-      <li><a href="/report">Reports</a></li>
-      <li><a href="/idea">Ideas</a></li>
-      <li><a href="/search?q=alumni">Search</a></li>
-      <li><a href="/api/info">API Info</a></li>
-      <li><a href="/login">Login</a></li>
-      <li><a href="/alumni-crud">CRUD</a></li>
-
-    </ul>
-    <input type="checkbox" id="burger">
-    <label for="burger"></label>
-    <div class="burger-menu">
-      <ul>
-        <li class="active"><a href="/">Alumni</a></li>
-        <li><a href="/report">Reports</a></li>
-        <li><a href="/idea">Ideas</a></li>
-        <li><a href="/search?q=alumni">Search</a></li>
-        <li><a href="/api/info">API Info</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/alumni-crud">CRUD</a></li>
-
-      </ul>
+    <div class="logo">Дарын Түлектер</div>
+    <div class="pages">
+        <ul class="nav-items" id="authNav">
+            <li><a href="/">Alumni</a></li>
+            <li><a href="/register">Register</a></li>
+        </ul>
     </div>
-  </div>
 </nav>
-<header>
-  <h1>Login</h1>
-  <h2>To log in to the system, please use the identification number and password that were issued to you.</h2>
-</header>
+
 <main>
-  <form action="/login" method="post" class="form border">
+  <br><br><br>
+  <form id="loginForm" class="form border">
     <h3>Login</h3>
+
     <div class="input">
-      <h6>Telephone</h6>
-      <input type="tel" name="phone" placeholder="+7 999 999 99 99" required>
+      <h6>Username</h6>
+      <input type="text" name="username" required>
     </div>
+
     <div class="input">
       <h6>Password</h6>
-      <input type="password" name="password" placeholder="Enter your password" required>
+      <input type="password" name="password" required>
     </div>
+
     <button type="submit">Login</button>
+    <p id="error" style="color:red;"></p>
   </form>
 </main>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+  const data = {
+    username: form.username.value,
+    password: form.password.value
+  };
+
+  const res = await fetch("/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  if (res.ok) {
+    window.location.href = "/alumni-crud";
+  } else {
+    document.getElementById("error").innerText = "Invalid credentials";
+  }
+});
+</script>
+
 </body>
 </html>

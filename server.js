@@ -2,8 +2,10 @@ require('dotenv').config();
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
+const session = require("express-session");
 
-const itemsRoutes = require("./routes/items.routes"); // Твои MongoDB роуты
+const itemsRoutes = require("./routes/items.routes");
+const authRoutes = require("./routes/auth.routes"); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,6 +13,18 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+    name: "sid",
+    secret: process.env.SESSION_SECRET || "secret123",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: false,
+        maxAge: 1000 * 60 * 60
+    }
+}));
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "index.html"));
@@ -24,9 +38,25 @@ app.get("/idea", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "idea.html"));
 });
 
-app.get("/login", (req, res) => {
-    res.sendFile(path.join(__dirname, "views", "login.html"));
+app.get("/login", (req, res) =>
+    res.sendFile(path.join(__dirname, "views/login.html"))
+);
+
+app.get("/register", (req, res) =>
+    res.sendFile(path.join(__dirname, "views/register.html"))
+);
+
+app.get("/auth/me", (req, res) => {
+    if (req.session.userId) {
+        return res.json({
+            authenticated: true,
+            username: req.session.username
+        });
+    }
+    res.json({ authenticated: false });
 });
+
+app.use("/auth", authRoutes);
 
 app.get("/alumni-crud", (req, res) => {
     res.sendFile(path.join(__dirname, "views", "alumni-card.html"));

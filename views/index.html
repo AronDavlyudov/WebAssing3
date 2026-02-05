@@ -10,53 +10,52 @@
 <nav class="navbar">
     <div class="logo">Дарын Түлектер</div>
     <div class="pages">
-        <ul class="nav-items">
-            <li class="active"><a href="/">Alumni</a></li>
-            <li><a href="/report">Reports</a></li>
-            <li><a href="/idea">Ideas</a></li>
-            <li><a href="/search?q=alumni">Search</a></li>
-            <li><a href="/api/info">API Info</a></li>
-            <li><a href="/login">Login</a></li>
+        <ul class="nav-items" id="authNav">
+            <li><a href="/">Alumni</a></li>
             <li><a href="/alumni-crud">CRUD</a></li>
-
+            <li><a href="/login">Login</a></li>
         </ul>
-        <input type="checkbox" id="burger">
-        <label for="burger"></label>
-        <div class="burger-menu">
-            <ul>
-                <li class="active"><a href="/">Alumni</a></li>
-                <li><a href="/report">Reports</a></li>
-                <li><a href="/idea">Ideas</a></li>
-                <li><a href="/search?q=alumni">Search</a></li>
-                <li><a href="/api/info">API Info</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/alumni-crud">CRUD</a></li>
-
-            </ul>
-        </div>
     </div>
 </nav>
+
 <header>
     <h1>Alumni Community</h1>
     <h2>Welcome to the Daryn Graduates platform.</h2>
-    <p style="margin-top:8px">API Test Links: <a href="/api/items">/api/items</a> | <a href="/api/items/1">/api/items/1</a></p>
 </header>
 <main class="alumni">
-    <div class="filter">
-        <ul>
-            <li class="active">Барлығы</li>
-            <li>2021</li>
-            <li>2022</li>
-            <li>2023</li>
-        </ul>
-    </div>
-    <div class="cards">
-        <div class="card" style="border: 1px solid #ccc; padding: 15px; margin-top: 20px;">
-            <h3>Graduate Name</h3>
-            <p>Class of 2023</p>
-            <a href="/item/ graduate_77" style="color: #007bff;">View Profile (Route Param Test)</a>
-        </div>
-    </div>
+    
 </main>
+
+<script>
+async function updateNavbar() {
+  const res = await fetch("/auth/me");
+  const data = await res.json();
+
+  const nav = document.getElementById("authNav");
+
+  if (data.authenticated) {
+    nav.innerHTML = `
+      <li><a href="/">Alumni</a></li>
+      <li><a href="/alumni-crud">CRUD</a></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    `;
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await fetch("/auth/logout", { method: "POST" });
+      window.location.href = "/login";
+    });
+
+  } else {
+    nav.innerHTML = `
+      <li><a href="/">Alumni</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+    `;
+  }
+}
+
+updateNavbar();
+</script>
+
 </body>
 </html>

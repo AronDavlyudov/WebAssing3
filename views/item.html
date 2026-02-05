@@ -5,35 +5,18 @@
     <title>Title</title>
 </head>
 <body>
+
 <nav class="navbar">
     <div class="logo">Дарын Түлектер</div>
     <div class="pages">
-        <ul class="nav-items">
-            <li class="active"><a href="/">Alumni</a></li>
-            <li><a href="/report">Reports</a></li>
-            <li><a href="/idea">Ideas</a></li>
-            <li><a href="/search?q=alumni">Search</a></li>
-            <li><a href="/api/info">API Info</a></li>
-            <li><a href="/login">Login</a></li>
+        <ul class="nav-items" id="authNav">
+            <li><a href="/">Alumni</a></li>
             <li><a href="/alumni-crud">CRUD</a></li>
-
+            <li><a href="/login">Login</a></li>
         </ul>
-        <input type="checkbox" id="burger">
-        <label for="burger"></label>
-        <div class="burger-menu">
-            <ul>
-                <li class="active"><a href="/">Alumni</a></li>
-                <li><a href="/report">Reports</a></li>
-                <li><a href="/idea">Ideas</a></li>
-                <li><a href="/search?q=alumni">Search</a></li>
-                <li><a href="/api/info">API Info</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/alumni-crud">CRUD</a></li>
-
-            </ul>
-        </div>
     </div>
 </nav>
+
 <h1>Items CRUD</h1>
 
 <input id="title" placeholder="Title">

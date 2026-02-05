@@ -12,7 +12,6 @@
         .btn-delete { background: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
         .btn-edit { background: #007bff; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-right: 5px; }
 
-        /* Стили для новых полей */
         .form-row { display: flex; gap: 10px; margin-bottom: 8px; }
         .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-right: 5px; }
         .badge-id { background: #e3f2fd; color: #1976d2; }
@@ -25,12 +24,9 @@
 <nav class="navbar">
     <div class="logo">Дарын Түлектер</div>
     <div class="pages">
-        <ul class="nav-items">
+        <ul class="nav-items" id="authNav">
             <li><a href="/">Alumni</a></li>
-            <li><a href="/report">Reports</a></li>
-            <li><a href="/idea">Ideas</a></li>
-            <li><a href="/api/items">API JSON</a></li>
-            <li><a href="/alumni-crud" class="active">CRUD</a></li>
+            <li><a href="/alumni-crud">CRUD</a></li>
         </ul>
     </div>
 </nav>
@@ -191,6 +187,35 @@
     }
 
     window.onload = loadItems;
+    
+async function updateNavbar() {
+  const res = await fetch("/auth/me");
+  const data = await res.json();
+
+  const nav = document.getElementById("authNav");
+
+  if (data.authenticated) {
+    nav.innerHTML = `
+      <li><a href="/">Alumni</a></li>
+      <li><a href="/alumni-crud">CRUD</a></li>
+      <li><button id="logoutBtn">Logout</button></li>
+    `;
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await fetch("/auth/logout", { method: "POST" });
+      window.location.href = "/login";
+    });
+
+  } else {
+    nav.innerHTML = `
+      <li><a href="/">Alumni</a></li>
+      <li><a href="/login">Login</a></li>
+      <li><a href="/register">Register</a></li>
+    `;
+  }
+}
+
+updateNavbar();
 </script>
 
 </body>

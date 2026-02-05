@@ -1,6 +1,7 @@
 const express = require("express");
 const { ObjectId } = require("mongodb");
 const connectDB = require("../database/mongo");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 const COLLECTION = "items";
@@ -56,7 +57,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
     const { title, description } = req.body;
 
     if (!title || !description)
@@ -76,24 +77,45 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
     try {
+        const allowedFields = [
+            "fullName",
+            "city",
+            "position",
+            "company",
+            "email",
+            "graduationYear"
+        ];
+
+        const updateData = {};
+        allowedFields.forEach(field => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
+        });
+
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({ error: "No valid fields to update" });
+        }
+
         const db = await connectDB();
-        const result = await db.collection(COLLECTION).updateOne(
+        const result = await db.collection("alumni").updateOne(
             { _id: new ObjectId(req.params.id) },
-            { $set: req.body }
+            { $set: updateData }
         );
 
-        if (!result.matchedCount)
-            return res.status(404).json({ error: "Item not found" });
+        if (!result.matchedCount) {
+            return res.status(404).json({ error: "Alumni not found" });
+        }
 
-        res.status(200).json({ message: "Updated" });
+        res.status(200).json({ message: "Updated successfully" });
     } catch {
-        res.status(400).json({ error: "Invalid id" });
+        res.status(400).json({ error: "Invalid ID" });
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
     try {
         const db = await connectDB();
         const result = await db.collection(COLLECTION).deleteOne({
